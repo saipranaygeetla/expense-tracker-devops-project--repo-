@@ -1,26 +1,44 @@
 package com.pranay.expensetracker.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "expenses")
+@Table(name="expenses")
 public class Expense {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable=false)
     private String title;
 
+    @Column(nullable=false)
     private Double amount;
+
+    private String category;
+
+    private String description;
+
+    private LocalDate expenseDate;
 
     public Expense() {
     }
 
-    public Expense(Long id, String title, Double amount) {
-        this.id = id;
-        this.title = title;
-        this.amount = amount;
+    public Expense(Long id,
+                   String title,
+                   Double amount,
+                   String category,
+                   String description,
+                   LocalDate expenseDate) {
+
+        this.id=id;
+        this.title=title;
+        this.amount=amount;
+        this.category=category;
+        this.description=description;
+        this.expenseDate=expenseDate;
     }
 
     public Long getId() {
@@ -28,7 +46,7 @@ public class Expense {
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id=id;
     }
 
     public String getTitle() {
@@ -36,7 +54,7 @@ public class Expense {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title=title;
     }
 
     public Double getAmount() {
@@ -44,6 +62,30 @@ public class Expense {
     }
 
     public void setAmount(Double amount) {
-        this.amount = amount;
+        this.amount=amount;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category=category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description=description;
+    }
+
+    public LocalDate getExpenseDate() {
+        return expenseDate;
+    }
+
+    public void setExpenseDate(LocalDate expenseDate) {
+        this.expenseDate=expenseDate;
     }
 }

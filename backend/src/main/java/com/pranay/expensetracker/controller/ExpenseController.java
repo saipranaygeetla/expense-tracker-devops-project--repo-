@@ -1,7 +1,9 @@
 package com.pranay.expensetracker.controller;
 
+import com.pranay.expensetracker.dto.ExpenseRequest;
 import com.pranay.expensetracker.entity.Expense;
 import com.pranay.expensetracker.service.ExpenseService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,16 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public Expense saveExpense(@RequestBody Expense expense) {
+    public Expense saveExpense(@Valid @RequestBody ExpenseRequest request) {
+
+        Expense expense = new Expense();
+
+        expense.setTitle(request.getTitle());
+        expense.setAmount(request.getAmount());
+        expense.setCategory(request.getCategory());
+        expense.setDescription(request.getDescription());
+        expense.setExpenseDate(request.getExpenseDate());
+
         return service.saveExpense(expense);
     }
 }

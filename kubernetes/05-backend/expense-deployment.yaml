@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: expense-app
+  namespace: expense-dev
+
+spec:
+  replicas: 2
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  selector:
+    matchLabels:
+      app: expense-app
+
+  template:
+
+    metadata:
+      labels:
+        app: expense-app
+
+    spec:
+
+      serviceAccountName: expense-sa
+
+      containers:
+
+      - name: expense-app
+
+        image: expense-tracker:v4
+
+        imagePullPolicy: Never
+
+        ports:
+        - containerPort: 8080
+
+        env:
+
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: expense-config
+              key: SPRING_DATASOURCE_URL
+
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: expense-config
+              key: SPRING_PROFILES_ACTIVE
+
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: expense-config
+              key: LOG_LEVEL
+
+        - name: TZ
+          valueFrom:
+            configMapKeyRef:
+              name: expense-config
+              key: TZ
+
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+        resources:
+
+          requests:
+
+            cpu: "250m"
+
+            memory: "256Mi"
+
+          limits:
+
+            cpu: "500m"
+
+            memory: "512Mi"
+
+        startupProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          failureThreshold: 30
+          periodSeconds: 5
+
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          perihelm dSeconds: 20
+          timeoutSeconds: 2
+          failureThreshold: 3

@@ -1,0 +1,22 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+
+metadata:
+  name: expense-reader-binding
+  namespace: expense-dev
+
+subjects:
+
+- kind: ServiceAccount
+
+  name: expense-sa
+
+  namespace: expense-dev
+
+roleRef:
+
+  kind: Role
+
+  name: expense-reader
+
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,45 @@
+namespace: expense-dev
+
+replicaCount: 2
+
+image:
+
+  repository: expense-tracker
+
+  tag: v3
+
+  pullPolicy: Never
+
+service:
+
+  type: NodePort
+
+  port: 8080
+
+  nodePort: 30080
+
+postgres:
+
+  image: postgres
+
+  tag: "17"
+
+  storage: 5Gi
+
+resources:
+
+  requests:
+
+    cpu: 250m
+
+    memory: 256Mi
+
+  limits:
+
+    cpu: 500m
+
+    memory: 512Mi
+
+datasource:
+
+  url: jdbc:postgresql://postgres:5432/expense_db

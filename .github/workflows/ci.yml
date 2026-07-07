@@ -1,4 +1,4 @@
-name: Expense Tracker CI
+name: Expense Tracker CI/CD
 
 on:
   push:
@@ -6,22 +6,38 @@ on:
       - main
 
 jobs:
-
   build:
 
     runs-on: ubuntu-latest
 
     steps:
 
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      # Checkout Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Setup Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: 21
+      # Install Java
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
 
-    - name: Build Application
-      working-directory: backend
-      run: mvn clean package -DskipTests
+      # Build Spring Boot
+      - name: Build Spring Boot
+        working-directory: backend
+        run: mvn clean package -DskipTests
+
+      # Upload JAR
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: expense-tracker
+          path: backend/target/*.jar
+
+      # Build Docker Image
+      - name: Build Docker Image
+        working-directory: backend
+        run: |
+          docker build -t saipranaygeetla/expense-tracker:latest .

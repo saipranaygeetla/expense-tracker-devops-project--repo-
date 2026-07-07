@@ -23,4 +23,5 @@ jobs:
         java-version: 21
 
     - name: Build Application
+      working-directory: backend
       run: mvn clean package
